@@ -1,6 +1,5 @@
 import tornado.ioloop
 import tornado.web
-
 from gapsule import settings
 import gapsule.models
 from gapsule.urls import routes
@@ -8,6 +7,7 @@ from gapsule.urls import routes
 
 def make_app():
     app = tornado.web.Application(routes, **settings.settings)
+
     return app
 
 

@@ -1,22 +1,20 @@
-import datetime
-
 from tornado.escape import json_decode
 
 from gapsule.handlers.Base import BaseHandler
 from gapsule.utils import unauthenticated
-from gapsule.utils.cookie_session import session_encode
+from gapsule.utils.cookie_session import session_encode, format_log_time
 from gapsule.utils.viewmodels import ViewModelDict, ViewModelField
 from gapsule.models.user import verify_user
 
 
 class SignInInput(ViewModelDict):
-    username = ViewModelField(required=True)
-    password = ViewModelField(required=True)
+    username: str = ViewModelField(required=True)
+    password: str = ViewModelField(required=True)
 
 
 class SignInResult(ViewModelDict):
-    state = ViewModelField(required=True)
-    error = ViewModelField(required=False)
+    state: str = ViewModelField(required=True)
+    error: str = ViewModelField(required=False)
 
 
 class SignInHandler(BaseHandler):
@@ -28,7 +26,7 @@ class SignInHandler(BaseHandler):
     def post(self):
         data = SignInInput(json_decode(self.request.body))
         session = verify_user(data.username, data.password)
-        logged_time = datetime.datetime.now().strftime("%Y/%m/%d% %H:%M:%S")
+        logged_time = format_log_time()
         if session is not None:
             dataobj = dict(user=data.username, session=session,
                            logged_time=logged_time)
