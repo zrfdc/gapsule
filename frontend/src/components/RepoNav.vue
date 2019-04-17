@@ -2,16 +2,22 @@
   <div class="reponav">
     <div class="bg-light" style="padding: 0 1%">
       <h4 style="padding:0.5rem 2%;">
-        <a :href="'/'+$route.params.owner">{{$route.params.owner}}</a>
+        <router-link :to="'/'+$route.params.owner">{{$route.params.owner}}</router-link>
         <strong>/</strong>
-        <a :href="'/'+fullRepoName()">{{$route.params.repo}}</a>
+        <router-link :to="'/'+fullRepoName()">{{ repoName() }}</router-link>
       </h4>
       <b-nav tabs>
-        <b-nav-item :active="$route.name=='Repo'" :href="'/'+fullRepoName()">Code</b-nav-item>
-        <b-nav-item :active="$route.name=='Issue'" :href="'/'+fullRepoName()+'/issues'">Issues</b-nav-item>
         <b-nav-item
-          :active="$route.name=='PullRequest'"
-          :href="'/'+fullRepoName()+'/pull'"
+          :active="$route.name.match(/(Repo|PullCompare|FileContent)/)"
+          :to="'/'+fullRepoName()"
+        >Code</b-nav-item>
+        <b-nav-item
+          :active="$route.name.match(/Issues(List)?/)"
+          :to="'/'+fullRepoName()+'/issues'"
+        >Issues</b-nav-item>
+        <b-nav-item
+          :active="$route.name.match(/Pull(Request|RequestList|Conversion|Commits)/)"
+          :to="'/'+fullRepoName()+'/pulls'"
         >Pull request</b-nav-item>
       </b-nav>
     </div>
@@ -28,7 +34,10 @@ export default {
   },
   methods: {
     fullRepoName() {
-      return this.$route.params.owner + "/" + this.$route.params.repo;
+      return this.$route.params.owner + "/" + this.repoName();
+    },
+    repoName() {
+      return this.$route.params.repo.split("/")[0];
     }
   }
 };

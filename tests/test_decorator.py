@@ -13,6 +13,8 @@ class AjaxQueryTestCase(unittest.TestCase):
                                 get_query_argument=ajax_arg_mock,
                                 request=Mock(method=method),
                                 render=render_mock,
+                                get_template_name=Mock(
+                                    return_value='index.html')
                                 )
         return query, handle_mock, render_mock
 
@@ -56,7 +58,7 @@ class AuthenticatedTestCase(unittest.TestCase):
         handle_mock = Mock()
         user = NonCallableMock(user='alice', active=False)
         query, redirect = self.create_query('GET', user)
-        f = unauthenticated(handle_mock)
+        f = unauthenticated('/')(handle_mock)
         f(query)
         redirect.assert_called_once()
         handle_mock.assert_not_called()
@@ -65,7 +67,7 @@ class AuthenticatedTestCase(unittest.TestCase):
         handle_mock = Mock()
         user = None
         query, redirect = self.create_query('GET', user)
-        f = unauthenticated(handle_mock)
+        f = unauthenticated('/')(handle_mock)
         f(query)
         redirect.assert_not_called()
         handle_mock.assert_called_once_with(query)
