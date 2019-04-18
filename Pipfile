@@ -10,7 +10,7 @@ pylint = "*"
 [packages]
 tornado = "*"
 asyncpg = "*"
-aiohttp = "*"
+chardet = "*"
 
 [requires]
 python_version = "3.7"
